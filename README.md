@@ -5,6 +5,7 @@
   # 🛡️ SafeStreet
   ### Hyper-Local Neighborhood Safety & Real-Time Incident Intelligence Platform
 
+  [![Live Demo](https://img.shields.io/badge/Live%20Demo-safestreet--1.onrender.com-10B981?style=for-the-badge&logo=render&logoColor=white)](https://safestreet-1.onrender.com/)
   [![Tests](https://img.shields.io/badge/Tests-15%20Passing-10B981?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
   [![React 19](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
   [![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -13,13 +14,17 @@
   [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20%2B%20GridFS-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
   [![Socket.IO](https://img.shields.io/badge/Socket.IO-Real--Time-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![Render Ready](https://img.shields.io/badge/Render-Deploy%20Ready-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/)
 
   <p align="center">
     <b>Empowering communities with real-time hazard detection, proximity radar alerts, and automated weekly safety digests.</b>
   </p>
 
   <p align="center">
+    <a href="https://safestreet-1.onrender.com/"><b>🌐 Launch Live Application (Render) →</b></a>
+  </p>
+
+  <p align="center">
+    <a href="https://safestreet-1.onrender.com/">🌐 Live Demo</a> •
     <a href="#-quick-start">🚀 Quick Start</a> •
     <a href="#-key-capabilities">✨ Key Capabilities</a> •
     <a href="#-system-architecture">🏛️ Architecture</a> •
@@ -159,7 +164,7 @@ npm run dev
 
 ## 👥 Demo Credentials
 
-The database seed script (`npm run seed`) pre-configures three ready-to-test accounts:
+The database seed script (`npm run seed`) pre-configures three ready-to-test accounts. You can use these credentials locally or to test the live cloud deployment directly at **[safestreet-1.onrender.com](https://safestreet-1.onrender.com/)**:
 
 | Role | Email | Password | Default Alert Location |
 |:---|:---|:---|:---|
@@ -285,9 +290,17 @@ Time:        3.412 s
 
 ---
 
-## ☁️ Deployment
+## ☁️ Deployment & Live Instance
 
-SafeStreet is pre-configured for automated cloud deployment with **[Render](https://render.com/)** using the included [`render.yaml`](render.yaml) blueprint:
+SafeStreet is live and deployed on **Render**:
+
+<p align="left">
+  <a href="https://safestreet-1.onrender.com/" target="_blank">
+    <img src="https://img.shields.io/badge/Production%20Instance-https%3A%2F%2Fsafestreet--1.onrender.com-10B981?style=for-the-badge&logo=render&logoColor=white" alt="SafeStreet Live Deployment" />
+  </a>
+</p>
+
+The repository includes a production-ready [`render.yaml`](render.yaml) blueprint for continuous deployment:
 
 <details>
 <summary><b>🚀 Click to view Render Blueprint deployment steps</b></summary>
@@ -300,7 +313,7 @@ SafeStreet is pre-configured for automated cloud deployment with **[Render](http
    * **`safestreet-api`**: Node.js web service running Express & Socket.IO.
    * **`safestreet-client`**: Static site running Vite React production build.
 4. Set the environment secrets in the Render Dashboard (`MONGO_URI`, `JWT_SECRET`, etc.).
-5. Your platform is live with automatic SSL and zero-downtime deploys!
+5. Your platform is live at your custom domain with automatic SSL and zero-downtime deploys!
 
 </details>
 
