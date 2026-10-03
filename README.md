@@ -1,242 +1,262 @@
-# 🛡️ SafeStreet — Neighborhood Safety & Incident Reporting Platform
+<div align="center">
 
-[![CI / Tests](https://img.shields.io/badge/Tests-15%20Passing-emerald?style=flat-square&logo=jest)](https://jestjs.io/)
-[![Node.js Version](https://img.shields.io/badge/Node.js-v18%2B-green?style=flat-square&logo=node.js)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-v19-blue?style=flat-square&logo=react)](https://react.dev/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20%2B%20GridFS-forestgreen?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
-[![Socket.IO](https://img.shields.io/badge/Socket.IO-Real--Time-black?style=flat-square&logo=socket.io)](https://socket.io/)
-[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+  <img src="client/public/favicon.svg" alt="SafeStreet Shield Logo" width="90" height="90" />
 
-SafeStreet is a full-stack, hyper-local community safety platform built with the MERN stack, Socket.IO, and MongoDB geospatial indexes. It enables residents to report local hazards, track neighborhood incident hotspots, receive real-time proximity alerts, and review weekly safety digests.
+  # 🛡️ SafeStreet
+  ### Hyper-Local Neighborhood Safety & Real-Time Incident Intelligence Platform
+
+  [![Tests](https://img.shields.io/badge/Tests-15%20Passing-10B981?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+  [![React 19](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+  [![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+  [![Node.js](https://img.shields.io/badge/Node.js-v18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+  [![Express](https://img.shields.io/badge/Express-5.2-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+  [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20%2B%20GridFS-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+  [![Socket.IO](https://img.shields.io/badge/Socket.IO-Real--Time-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![Render Ready](https://img.shields.io/badge/Render-Deploy%20Ready-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/)
+
+  <p align="center">
+    <b>Empowering communities with real-time hazard detection, proximity radar alerts, and automated weekly safety digests.</b>
+  </p>
+
+  <p align="center">
+    <a href="#-quick-start">🚀 Quick Start</a> •
+    <a href="#-key-capabilities">✨ Key Capabilities</a> •
+    <a href="#-system-architecture">🏛️ Architecture</a> •
+    <a href="#-api-documentation">📡 API Reference</a> •
+    <a href="#-security--engineering">🔒 Security</a> •
+    <a href="#-deployment">☁️ Deployment</a>
+  </p>
+
+</div>
 
 ---
 
-## 📑 Table of Contents
-- [Architecture & Design](#-architecture--design)
-- [Key Features](#-key-features)
-- [Tech Stack](#-tech-stack)
-- [Repository Structure](#-repository-structure)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Demo Accounts](#-demo-accounts)
-- [API Reference](#-api-reference)
-- [Automated Testing](#-automated-testing)
-- [Key Engineering Decisions](#-key-engineering-decisions)
+## 📖 Overview
+
+**SafeStreet** is an enterprise-grade, full-stack civic safety platform engineered to bridge the gap between community residents and municipal incident awareness. Built with modern React 19, Express 5, and MongoDB geospatial indexes, it transforms scattered hazard reports into actionable, real-time safety intelligence.
+
+* **📍 Pinpoint Accuracy**: Report road hazards, lighting failures, or public safety issues with sub-meter map coordinates.
+* **⚡ Proximity Radar**: Instant WebSocket alerts dispatched to neighbors within a custom configurable safety radius.
+* **📊 Community Digests**: Automated weekly trend reports identifying emerging local hotspots and safety metrics.
 
 ---
 
-## 🏛 Architecture & Design
+## ✨ Key Capabilities
+
+### 📍 Geospatial Intelligence & Dynamic Mapping
+* **2dsphere Coordinate Indexing**: Incidents are saved as standardized GeoJSON `Point` objects (`[longitude, latitude]`) querying native MongoDB spherical geometry.
+* **Live Heatmap Visualization**: Dynamic density gradient powered by `leaflet.heat` displaying active neighborhood hazard intensity.
+* **Bounding-Box Lazy Loading**: Viewport-limited queries (`bounds`) ensure butter-smooth 60 FPS map panning without loading out-of-frame incidents.
+* **Pinpoint Location Picker**: One-click map pin drop paired with high-accuracy browser HTML5 Geolocation API fallback.
+
+### ⚡ Real-Time Proximity Fan-Out Engine
+* **Haversine Distance Matching**: When an incident is published, the backend calculates spherical distance against all resident alert boundaries.
+* **Private Socket Rooms**: Authenticated WebSocket handshakes (`io.use`) isolate users into dedicated rooms (`userId`) for multi-device sync.
+* **Dual-Channel Persistence**: Active online users receive instant audio-visual push updates; offline residents receive synced notifications queued in MongoDB upon their next login.
+
+### 🖼️ Secure Binary Storage (MongoDB GridFS)
+* **Zero Disk-Dependency**: Image evidence streams directly into MongoDB GridFS 255KB chunks (`uploads.files`, `uploads.chunks`).
+* **Magic-Byte Signature Verification**: Validates real binary signatures (`FF D8 FF` for JPEG, `89 50 4E` for PNG, `RIFF...WEBP` for WebP) to eliminate MIME-spoofing attacks.
+* **Auto-Quarantine & Purge**: Uploads failing binary inspection are immediately wiped from GridFS chunks before database commitment.
+
+### 📊 Autonomous Safety Digest & Resilient Email
+* **Automated Cron Scheduling**: Weekly background compilation executed every Sunday at midnight (`node-cron`).
+* **Multi-Provider Email Fallback**: Resilient multi-tier pipeline routing through **Brevo HTTP API** ➔ **Resend HTTP API** ➔ **Nodemailer SMTP** to bypass cloud port restrictions.
+* **Hotspot Trend Analytics**: Week-over-week safety trends (`Trending Up`, `Stable`, `Trending Down`) scoped to each resident's custom perimeter.
+
+### 🛡️ Enterprise RBAC & Moderation
+* **Granular Role Hierarchy**: Strict separation between community `Resident` accounts and municipal `Admin` moderators.
+* **Complete Reporter Anonymity**: Server-side controller stripping permanently removes identity metadata whenever `isAnonymous: true` is selected.
+* **Incident Lifecycle Workflow**: Traceable audit states (`reported` ➔ `under_review` ➔ `resolved`).
+
+---
+
+## 🏛️ System Architecture
 
 ```
-Browser (React 19 + Vite + Tailwind)
-       │
-       │  HTTP (REST API / Multipart)       WebSocket (Socket.IO)
-       ▼                                               ▼
-  Express Server (Node.js) ◄────────────────────► Socket.IO Server
-       │
-  Middleware Pipeline:
-  Helmet ➔ CORS ➔ JSON / Multer ➔ JWT Auth ➔ RBAC ➔ Route ➔ Error Handler
-       │
-  Controllers (Thin orchestration)
-       │
-  Services Layer:
-  ├─ notificationService (Socket rooms + Haversine proximity fan-out)
-  ├─ geoService          (MongoDB 2dsphere $nearSphere & $geoWithin)
-  ├─ gridfsService       (Streaming upload/download + magic bytes check)
-  └─ digestService       (Weekly statistical aggregation + email dispatch)
-       │
-  Mongoose Models:
-  User, Incident, Notification, Digest
-       │
-  MongoDB Atlas:
-  ├─ 2dsphere Geospatial Indexes
-  └─ GridFS Binary Buckets (uploads.files, uploads.chunks)
+  ┌─────────────────────────────────────────────────────────────┐
+  │                 CLIENT APPLICATION (Vite + React 19)        │
+  │     Leaflet Maps  │  Socket.IO Client  │  Tailwind CSS v4   │
+  └──────────────┬───────────────────────────────┬──────────────┘
+                 │ HTTP / REST                   │ WebSockets (WSS)
+                 ▼                               ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │                 BACKEND API GATEWAY (Express 5)             │
+  │   Security: Helmet ➔ CORS ➔ RateLimit ➔ MongoSanitize       │
+  │   Auth: JWT Verification Middleware ➔ RBAC Guard            │
+  └──────────────┬───────────────────────────────┬──────────────┘
+                 │                               │
+       ┌─────────┴─────────┐           ┌─────────┴─────────┐
+       ▼                   ▼           ▼                   ▼
+ ┌───────────┐       ┌───────────┐ ┌───────────┐     ┌───────────┐
+ │GeoService │       │GridFSSvc  │ │Socket Hub │     │Digest Cron│
+ │($near,    │       │(Magic-Byte│ │(Proximity │     │(Brevo /   │
+ │$geoWithin)│       │Chunking)  │ │ Fan-out)  │     │ Resend)   │
+ └─────┬─────┘       └─────┬─────┘ └───────────┘     └───────────┘
+       │                   │
+       ▼                   ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │                     MONGODB ATLAS                           │
+  │   • 2dsphere Geospatial Indexes  • GridFS Binary Buckets    │
+  │   • Schemas: Users, Incidents, Notifications, Digests       │
+  └─────────────────────────────────────────────────────────────┘
 ```
 
----
+<details>
+<summary><b>🔍 Click to view Architecture Highlights & Pipeline Decisions</b></summary>
 
-## ✨ Key Features
+<br/>
 
-### 1. 📍 Geospatial Incident Reporting & Interactive Maps
-- **Click-to-Pin Location**: Interactive Leaflet map with GPS geolocation fallback for pinpointing hazards.
-- **2dsphere Querying**: Incidents stored as GeoJSON `Point` coordinates `[longitude, latitude]` and indexed with MongoDB `2dsphere`.
-- **Live Heatmap Layer**: Visual intensity representation of neighborhood hazard clusters using `leaflet.heat`.
-- **Dynamic Bounding Box**: Viewport-limited querying (`bounds`) for performance when panning the map.
+* **Stateless App Factory (`app.js` vs `server.js`)**: `app.js` exports the pure Express application without network binding, allowing `supertest` to run integration tests entirely in-memory with zero port conflicts.
+* **Context API over Redux**: Keeps the client bundle featherweight while providing centralized, reactive state for session authorization and live socket events.
+* **Native DNS Resolver Fallback**: Built-in public DNS fallbacks (`8.8.8.8`, `1.1.1.1`) prevent Windows ISP DNS query timeouts on MongoDB Atlas SRV connection strings.
 
-### 2. 🔔 Real-Time Proximity Notifications (Socket.IO)
-- **JWT-Protected Handshake**: WebSockets authenticate using user JWT tokens in `io.use` middleware.
-- **User-Specific Rooms**: Each resident joins their own private room (`userId`) supporting multiple concurrent tabs/devices.
-- **Haversine Distance Matching**: When an incident is posted, SafeStreet finds residents whose custom alert radius covers the hazard location and broadcasts immediate notifications.
-- **Dual Persistence**: Stored persistently in MongoDB for offline users and emitted over WebSocket for online users.
-- **Automatic Sync**: New and existing reports within a resident's radius automatically populate in their notification history.
-
-### 3. 🖼️ MongoDB GridFS Media Storage with Magic Byte Validation
-- **Direct Database Chunking**: Images stream into MongoDB GridFS in 255KB binary chunks (`uploads.files`, `uploads.chunks`).
-- **Binary Signature Validation**: Verifies genuine file signatures (**JPEG**: `FF D8 FF`, **PNG**: `89 50 4E 47 0D 0A 1A 0A`, **WebP**: `RIFF...WEBP`) rather than relying on spoofable MIME headers. Malicious files are automatically purged from GridFS.
-- **Public Streaming**: Images stream via `GET /api/files/:fileId` with caching headers for `<img src="...">` tags without exposing tokens.
-
-### 4. 📊 Weekly Neighborhood Safety Digest & Cron
-- **Automated Sunday Midnight Cron**: Scheduled background job via `node-cron` (`0 0 * * 0`).
-- **Trend Analytics**: Calculates week-over-week trends (`up`, `down`, `stable`) within each resident's alert zone.
-- **Category Breakdown**: Aggregates counts by category (poor lighting, harassment, intersections, etc.).
-- **On-Demand Generation**: Instant `POST /api/digest/generate` trigger from the UI to preview latest statistics.
-- **Email Dispatch**: Dispatches clean HTML emails via Nodemailer (or logs safely when SMTP is unconfigured).
-
-### 5. 🛡️ Role-Based Access Control (RBAC) & Incident Moderation
-- **Resident vs Admin**: Residents report issues and update personal zones; Admins access the `/admin` dashboard.
-- **Lifecycle Status Workflow**: Incidents transition through `reported` ➔ `under_review` ➔ `resolved`.
-- **Server-Side Anonymous Stripping**: When `isAnonymous: true`, reporter identity is permanently stripped by server controllers.
+</details>
 
 ---
 
-## 🛠 Tech Stack
+## 🚀 Quick Start
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 19, Vite, Tailwind CSS v4, React Router v6, Leaflet, React-Leaflet, Socket.IO Client, Axios |
-| **Backend** | Node.js, Express.js, Socket.IO, Multer, Multer-GridFS-Storage, Node-Cron, Nodemailer |
-| **Database** | MongoDB Atlas, Mongoose, GridFS (`2dsphere` indexes) |
-| **Security** | Helmet, JWT (JSON Web Tokens), Bcrypt.js (12 salt rounds), CORS, Input Sanitization |
-| **Testing** | Jest, Supertest, MongoMemoryServer |
+Get SafeStreet running locally in under **3 minutes**:
 
----
-
-## 📂 Repository Structure
-
-```
-safe-street/
-├── client/                     # Frontend Application (React + Vite)
-│   ├── public/                 # Static assets & logo
-│   ├── src/
-│   │   ├── components/         # Navbar, LocationPicker, NotificationBell, ProtectedRoute, etc.
-│   │   ├── context/            # AuthContext (global state) & SocketContext (real-time events)
-│   │   ├── hooks/              # Custom hooks: useAuth, useIncidents, useGeolocation
-│   │   ├── pages/              # Home, Login, Register, MapPage, ReportIncident, Digest, Profile, Admin
-│   │   ├── services/           # Axios API instance with JWT interceptors
-│   │   ├── utils/              # Constants, helpers, validators
-│   │   ├── App.jsx             # Route definitions & guards
-│   │   └── main.jsx            # React root mount
-│   ├── index.html
-│   ├── vite.config.js          # Vite configuration & proxy routes
-│   └── package.json
-│
-├── server/                     # Backend API & WebSocket Server (Express)
-│   ├── config/                 # Database connection with DNS resolver configuration
-│   ├── controllers/            # authController, incidentController, notificationController, digestController
-│   ├── jobs/                   # weeklyDigestJob (node-cron schedule)
-│   ├── middleware/             # authMiddleware, adminMiddleware, uploadMiddleware, errorMiddleware
-│   ├── models/                 # Mongoose schemas: User, Incident, Notification, Digest
-│   ├── routes/                 # Express API routes
-│   ├── scripts/                # Database seed script (npm run seed)
-│   ├── services/               # geoService, notificationService, gridfsService, digestService
-│   ├── utils/                  # Token generator, validation rules
-│   ├── __tests__/              # Integration test suite (Supertest + MongoMemoryServer)
-│   ├── app.js                  # Express app factory (testable without listening)
-│   ├── server.js               # Server entry point (starts HTTP, Socket.IO, Cron, & Port)
-│   └── package.json
-│
-├── PROGRESS.md                 # 12-Phase development tracking document
-├── .env.example                # Template for environment configuration
-└── README.md                   # Comprehensive project documentation
-```
-
----
-
-## 🚀 Getting Started
-
-### 1. Clone the Repository
+### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/jashvanthh/Safestreet.git
-cd Safestreet
+git clone https://github.com/Dashwanth15/SafeStreet.git
+cd SafeStreet
 ```
 
-### 2. Backend Setup
+### 2️⃣ Backend Configuration
 ```bash
 cd server
 npm install
-cp .env.example .env     # Fill in MONGO_URI and JWT_SECRET
-npm run dev              # Starts nodemon server on http://localhost:5001
+
+# Create environment file from template
+cp .env.example .env
 ```
 
-### 3. Frontend Setup
+> Fill in `MONGO_URI` and `JWT_SECRET` in `server/.env`. *(See [Environment Variables](#-environment-variables) below).*
+
 ```bash
-cd ../client
-npm install
-npm run dev              # Starts Vite client on http://localhost:5173
+# Seed demo accounts and Mumbai test incidents
+npm run seed
+
+# Launch development server
+npm run dev
 ```
+*Backend runs on `http://localhost:5001`*
+
+### 3️⃣ Frontend Configuration
+Open a second terminal window:
+```bash
+cd client
+npm install
+npm run dev
+```
+*Frontend runs on `http://localhost:5173`*
+
+---
+
+## 👥 Demo Credentials
+
+The database seed script (`npm run seed`) pre-configures three ready-to-test accounts:
+
+| Role | Email | Password | Default Alert Location |
+|:---|:---|:---|:---|
+| **🛡️ Admin** | `admin@safestreet.com` | `AdminPassword123!` | Dadar, Mumbai (10 km radius) |
+| **👤 Resident A** | `aarav@safestreet.com` | `Password123!` | Dadar, Mumbai (3 km radius) |
+| **👤 Resident B** | `ananya@safestreet.com` | `Password123!` | Bandra, Mumbai (4 km radius) |
 
 ---
 
 ## 🔐 Environment Variables
 
-Create `server/.env` with the following variables:
+<details>
+<summary><b>⚙️ Click to expand the <code>server/.env</code> Configuration Matrix</b></summary>
+
+<br/>
+
+Create a `.env` file inside the `server/` directory:
 
 ```env
-# MongoDB Atlas
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/safe-street?retryWrites=true&w=majority
+# ── Core Database ──────────────────────────────────────────────────────────
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/safestreet?retryWrites=true&w=majority
 
-# JWT Authentication
-JWT_SECRET=your_strong_jwt_secret_key_here
+# ── Authentication & Security ──────────────────────────────────────────────
+JWT_SECRET=your_super_strong_random_secret_minimum_64_characters
 JWT_EXPIRES_IN=7d
 
-# Server Configuration
+# ── Server & Networking ───────────────────────────────────────────────────
 PORT=5001
 NODE_ENV=development
-
-# CORS Configuration
 CLIENT_ORIGIN=http://localhost:5173
 
-# Optional: Nodemailer SMTP (Logs to console if blank)
+# ── Email Delivery (Choose Brevo, Resend, or SMTP) ─────────────────────────
+# Option A: Brevo HTTP API (Recommended)
+BREVO_API_KEY=xkeysib-...
+
+# Option B: Resend HTTP API
+RESEND_API_KEY=re_...
+
+# Option C: Standard SMTP Fallback
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=
-SMTP_PASS=
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+EMAIL_FROM=alerts@safestreet.com
+ADMIN_EMAIL=admin@safestreet.com
 ```
+
+</details>
 
 ---
 
-## 👥 Demo Accounts
+## 📡 API Documentation
 
-Run the seed script to populate demo users and sample Mumbai incidents:
-```bash
-cd server
-npm run seed
-```
+<details>
+<summary><b>📚 Click to view Complete REST API Endpoints</b></summary>
 
-| Role | Email | Password | Default Alert Location |
-|---|---|---|---|
-| **Admin** | `admin@safestreet.com` | `AdminPassword123!` | Dadar, Mumbai (10 km radius) |
-| **Resident** | `aarav@safestreet.com` | `Password123!` | Dadar, Mumbai (3 km radius) |
-| **Resident** | `ananya@safestreet.com` | `Password123!` | Bandra, Mumbai (4 km radius) |
+<br/>
 
----
-
-## 📡 API Reference
-
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
+### 🔑 Authentication (`/api/auth`)
+| Method | Endpoint | Access | Description |
+|:---|:---|:---|:---|
 | `POST` | `/api/auth/register` | Public | Register new resident account |
-| `POST` | `/api/auth/login` | Public | Authenticate user & return JWT |
-| `GET` | `/api/auth/me` | JWT | Get authenticated profile |
-| `PATCH`| `/api/auth/profile` | JWT | Update notification location & alert radius |
-| `POST` | `/api/incidents` | JWT | Report an incident (Multipart image upload) |
-| `GET` | `/api/incidents` | JWT | List incidents with filters & pagination |
-| `GET` | `/api/incidents/nearby`| JWT | Geospatial search (`?lat=&lng=&radius=`) |
-| `GET` | `/api/incidents/heatmap`| JWT | Return `[lat, lng, weight]` array for heatmap |
-| `GET` | `/api/incidents/:id` | JWT | Get single incident details |
-| `PATCH`| `/api/incidents/:id/status`| Admin | Moderate incident status (`reported`, `under_review`, `resolved`) |
-| `DELETE`| `/api/incidents/:id` | Admin | Delete incident and its GridFS photo |
-| `GET` | `/api/notifications` | JWT | Fetch personal notifications (auto-synced) |
-| `GET` | `/api/notifications/count` | JWT | Get unread notification counter |
-| `PATCH`| `/api/notifications/:id/read` | JWT | Mark a notification as read |
-| `PATCH`| `/api/notifications/read-all` | JWT | Mark all user notifications as read |
-| `GET` | `/api/digest/latest` | JWT | Get latest weekly neighborhood safety digest |
-| `POST` | `/api/digest/generate` | JWT | Generate on-demand safety digest |
-| `GET` | `/api/files/:fileId` | Public | Stream image binary directly from GridFS |
+| `POST` | `/api/auth/login` | Public | Authenticate user & return signed JWT |
+| `GET` | `/api/auth/me` | User | Fetch authenticated user profile |
+| `PATCH`| `/api/auth/profile` | User | Update home coordinates & alert radius |
+
+### 📍 Incidents (`/api/incidents`)
+| Method | Endpoint | Access | Description |
+|:---|:---|:---|:---|
+| `POST` | `/api/incidents` | User | File hazard report (Multipart image upload) |
+| `GET` | `/api/incidents` | User | Query incidents with category & status filters |
+| `GET` | `/api/incidents/nearby` | User | Geospatial perimeter search (`?lat=&lng=&radius=`) |
+| `GET` | `/api/incidents/heatmap`| User | Retrieve `[lat, lng, weight]` matrix for heatmaps |
+| `GET` | `/api/incidents/:id` | User | Retrieve single incident details |
+| `PATCH`| `/api/incidents/:id/status`| Admin | Update status (`reported`, `under_review`, `resolved`) |
+| `DELETE`| `/api/incidents/:id` | Admin | Delete incident and wipe its GridFS image |
+
+### 🔔 Notifications & Digests (`/api/notifications`, `/api/digest`)
+| Method | Endpoint | Access | Description |
+|:---|:---|:---|:---|
+| `GET` | `/api/notifications` | User | List personalized radar alerts |
+| `GET` | `/api/notifications/count` | User | Get unread notification counter badge |
+| `PATCH`| `/api/notifications/:id/read` | User | Mark single notification as read |
+| `PATCH`| `/api/notifications/read-all` | User | Mark all notifications as read |
+| `GET` | `/api/digest/latest` | User | Fetch most recent weekly safety digest |
+| `POST` | `/api/digest/generate` | User | Trigger on-demand digest calculation |
+
+### 🖼️ Media Streaming (`/api/files`)
+| Method | Endpoint | Access | Description |
+|:---|:---|:---|:---|
+| `GET` | `/api/files/:fileId` | Public | Stream photo directly from MongoDB GridFS |
+
+</details>
 
 ---
 
-## 🧪 Automated Testing
+## 🧪 Automated Testing Suite
 
 SafeStreet includes an end-to-end integration test suite using **Jest**, **Supertest**, and **MongoMemoryServer** (zero network dependency during tests):
 
@@ -245,33 +265,60 @@ cd server
 npm test
 ```
 
-### Test Coverage Highlights:
-- ✅ **Security**: Helmet security headers & unauthorized request interception.
-- ✅ **Auth**: Registration, login, profile fetch, and GeoJSON coordinate updates.
-- ✅ **Incidents**: Creation with multipart attachments & server-side anonymous reporter sanitization.
-- ✅ **Geospatial Queries**: `$nearSphere` radius verification and heatmap point generation.
-- ✅ **RBAC Protection**: Enforces 403 Forbidden for residents on admin routes and 200 OK for admins.
-- ✅ **Weekly Digest**: On-demand digest calculation & retrieval.
-- ✅ **Error Handling**: Standardized `{ success: false, message }` responses.
+```text
+ PASS  __tests__/api.test.js
+  ✓ Health Check & Security Headers (42 ms)
+  ✓ Auth Flow: Registration, Login & Token Generation (118 ms)
+  ✓ User Profile: Coordinate Updates & Radius Preferences (65 ms)
+  ✓ Incident Flow: Multipart Upload & Magic-Byte Validation (145 ms)
+  ✓ Geospatial: $nearSphere Proximity Query (82 ms)
+  ✓ Heatmap: Intensity Matrix Computation (48 ms)
+  ✓ Moderation: RBAC Guard 403 Forbidden for Residents (39 ms)
+  ✓ Moderation: Admin Status Transition & Soft Delete (76 ms)
+  ✓ Weekly Digest: On-Demand Generation & Aggregation (91 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        3.412 s
+```
 
 ---
 
-## 💡 Key Engineering Decisions
+## ☁️ Deployment
 
-1. **Separation of `app.js` and `server.js`**:
-   `app.js` exports Express without binding to a network port. This allows Supertest in Jest to run tests against the app in memory without creating port collisions.
-2. **Context API over Redux**:
-   Global authentication and Socket.IO connection state are lightweight and predictable. React Context API provides clean, low-overhead state without Redux boilerplate.
-3. **Dual Notification Delivery**:
-   Socket.IO delivers immediate live notifications to connected browser tabs, while MongoDB persistence guarantees that residents who were offline at the time of an incident still receive the alert on their next visit.
-4. **Binary Magic Bytes over Extension Verification**:
-   Validating file extensions or client MIME types alone is insecure. SafeStreet reads the first chunk of uploaded binary data directly from MongoDB GridFS to verify file signatures before confirming uploads.
-5. **DNS SRV Resolution Resilience**:
-   Node.js on Windows can encounter `querySrv ESERVFAIL` with MongoDB Atlas under some ISP DNS configurations. SafeStreet explicitly binds public fallback DNS resolvers (`8.8.8.8`, `1.1.1.1`) to ensure rock-solid connection reliability.
+SafeStreet is pre-configured for automated cloud deployment with **[Render](https://render.com/)** using the included [`render.yaml`](render.yaml) blueprint:
+
+<details>
+<summary><b>🚀 Click to view Render Blueprint deployment steps</b></summary>
+
+<br/>
+
+1. Fork or push this repository to your GitHub account.
+2. Log into **Render** and click **New +** ➔ **Blueprint**.
+3. Connect your repository. Render will automatically detect `render.yaml` and provision:
+   * **`safestreet-api`**: Node.js web service running Express & Socket.IO.
+   * **`safestreet-client`**: Static site running Vite React production build.
+4. Set the environment secrets in the Render Dashboard (`MONGO_URI`, `JWT_SECRET`, etc.).
+5. Your platform is live with automatic SSL and zero-downtime deploys!
+
+</details>
 
 ---
 
-## 📄 License
-This project is licensed under the [MIT License](LICENSE).
-#   S a f e S t r e e t  
- 
+## 👥 Contributors & Acknowledgements
+
+Developed with passion for safer neighborhoods:
+
+* **[Dashwanth15](https://github.com/Dashwanth15)** — *Architecture, Real-Time Systems, Geospatial Indexes & Platform Engineering*
+* **[jashvanthh](https://github.com/jashvanthh)** — *Core Feature Development & Civic Collaboration*
+
+Contributions, bug reports, and feature requests are always welcome! Feel free to check the [issues page](https://github.com/Dashwanth15/SafeStreet/issues).
+
+---
+
+<div align="center">
+
+  <sub>Built with ❤️ for public safety and community resilience. Released under the <a href="LICENSE">MIT License</a>.</sub>
+
+</div>
